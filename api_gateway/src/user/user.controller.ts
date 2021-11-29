@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 import { UserDto } from './dto/user.dto';
 
@@ -19,22 +27,36 @@ export class UserController {
   client: ClientKafka;
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get.users.list');
-    this.client.subscribeToResponseOf('get.one.email');
-    this.client.subscribeToResponseOf('create.new.user');
-    this.client.subscribeToResponseOf('delete.one.user');
+    this.client.subscribeToResponseOf('get.users');
+    this.client.subscribeToResponseOf('get.email');
+    this.client.subscribeToResponseOf('create.user');
+    this.client.subscribeToResponseOf('delete.user');
+    this.client.subscribeToResponseOf('update.user');
 
     await this.client.connect();
   }
 
   @Get()
   async get() {
-    return this.client.send('get.users.list', '');
+    return this.client.send('get.users', '');
   }
+
+  // @Post()
+  // async getEmail(@Param() email: string) {
+  //   return this.client.send('get.one.email', email);
+  // }
 
   @Post()
   async createUser(@Body() userDto: UserDto) {
     console.log(userDto);
-    return await this.client.send('create.new.user', userDto);
+    return this.client.send('create.user', userDto);
   }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    return this.client.emit('delete.user', { id });
+  }
+
+  @Put()
+  async update() {}
 }

@@ -7,36 +7,42 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { IKafkaMessage } from 'src/interfaces/kafka-message.interface';
 import { UserDto } from './dto/user.dto';
+import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 
 @Controller()
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @MessagePattern('get.users.list')
-  @Get()
+  @MessagePattern('get.users')
   async getAll() {
     return this.userService.getAll();
   }
 
-  @MessagePattern('get.one.email')
-  @Get(':email')
-  async getOne(@Param('email') email: IKafkaMessage<string>) {
-    return this.userService.getByEmail(email.value);
+  // @MessagePattern('get.email')
+  // @Post()
+  // async getOne(@Param('email') email: IKafkaMessage<string>) {
+  //   return this.userService.getByEmail(email.value);
+  // }
+
+  @MessagePattern('create.user')
+  async create(@Payload() data: IKafkaMessage<User>) {
+    return this.userService.create(data.value);
   }
 
-  @MessagePattern('create.new.user')
-  @Post()
-  async create(@Body() userDto: IKafkaMessage<UserDto>) {
-    return this.userService.create(userDto.value);
+  @MessagePattern('delete.user')
+  async remove(@Payload() data: IKafkaMessage<User>) {
+    return this.userService.remove(String(data.value.id));
   }
 
-  @MessagePattern('delete.one.user')
-  @Delete(':id')
-  async remove(@Param('index') index: IKafkaMessage<number>) {
-    return this.userService.remove(index.value);
+  @MessagePattern('update.user')
+  async update(
+    @Param() data: IKafkaMessage<User>,
+    @Body() userDto: IKafkaMessage<UserDto>,
+  ) {
+    return this.userService.update(String(data.value.id), userDto.value);
   }
 }
