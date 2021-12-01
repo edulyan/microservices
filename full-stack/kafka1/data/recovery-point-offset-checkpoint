@@ -6,7 +6,7 @@ __consumer_offsets 30 0
 get.users.reply 0 0
 __consumer_offsets 8 0
 __consumer_offsets 21 0
-create.user.reply 0 0
+create.user.reply 0 3
 __consumer_offsets 4 0
 delete.one.user 0 0
 create.new.user.reply 0 6
@@ -16,8 +16,8 @@ __consumer_offsets 9 0
 __consumer_offsets 46 0
 update.user.reply 0 0
 __consumer_offsets 25 0
-__consumer_offsets 35 38
-__consumer_offsets 41 39
+__consumer_offsets 35 51
+__consumer_offsets 41 62
 __consumer_offsets 33 0
 __consumer_offsets 23 0
 __consumer_offsets 49 0
@@ -44,7 +44,7 @@ __confluent.support.metrics 0 0
 get.one.email.reply 0 0
 __consumer_offsets 19 0
 __consumer_offsets 11 0
-create.user 0 7
+create.user 0 10
 __consumer_offsets 13 0
 __consumer_offsets 2 0
 __consumer_offsets 43 0
